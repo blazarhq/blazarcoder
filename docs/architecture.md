@@ -1,22 +1,22 @@
-# Ceracoder Architecture
+# Blazarcoder Architecture
 
-This document describes the high-level architecture of ceracoder, a live video encoder with dynamic bitrate control and SRT streaming support.
+This document describes the high-level architecture of blazarcoder, a live video encoder with dynamic bitrate control and SRT streaming support.
 
 ## Overview
 
-Ceracoder is a C application built on top of:
+Blazarcoder is a C application built on top of:
 
 - **GStreamer** for media capture, encoding, and muxing
 - **libsrt** (SRT protocol) for reliable low-latency transport over unreliable networks
 
-The core value proposition is **adaptive bitrate control**: ceracoder monitors SRT connection quality in real-time and adjusts the encoder bitrate to match available network capacity—critical for live streaming over bonded 4G/5G modems or other variable-bandwidth links.
+The core value proposition is **adaptive bitrate control**: blazarcoder monitors SRT connection quality in real-time and adjusts the encoder bitrate to match available network capacity—critical for live streaming over bonded 4G/5G modems or other variable-bandwidth links.
 
 ## Repository Structure
 
 ```
-ceracoder/
+blazarcoder/
 ├── src/                      # Source code
-│   ├── ceracoder.c           # Main application (orchestrates modules)
+│   ├── blazarcoder.c           # Main application (orchestrates modules)
 │   ├── balancer.h            # Balancer algorithm interface
 │   ├── core/                 # Core logic modules
 │   │   ├── config.c/h        # INI config file parser
@@ -49,7 +49,7 @@ ceracoder/
 ├── docs/                     # Documentation (you are here)
 ├── Makefile                  # Build system
 ├── Dockerfile                # Container build
-├── ceracoder.conf.example    # Example configuration file
+├── blazarcoder.conf.example    # Example configuration file
 └── README.md
 ```
 
@@ -57,7 +57,7 @@ ceracoder/
 
 | Module | Files | Responsibility |
 |--------|-------|----------------|
-| Main | `src/ceracoder.c` | Application entry point, main loop, signal handling |
+| Main | `src/blazarcoder.c` | Application entry point, main loop, signal handling |
 | CLI Options | `src/io/cli_options.c/h` | Command-line argument parsing |
 | Config | `src/core/config.c/h` | INI config file parsing, runtime reload via SIGHUP |
 | Pipeline Loader | `src/io/pipeline_loader.c/h` | Load GStreamer pipeline from file |
@@ -122,7 +122,7 @@ ENCODER DEVICE (Field)                       SERVER (Ingest/Cloud)
 Video Source (HDMI/USB/etc)
         |
         v
-   ceracoder (GStreamer internal)
+   blazarcoder (GStreamer internal)
         |
         | SRT (localhost)
         v
@@ -152,10 +152,10 @@ Video Source (HDMI/USB/etc)
                         OBS / Player / CDN
 ```
 
-## TypeScript Bindings (`@ceralive/ceracoder`)
+## TypeScript Bindings (`@blazarbox/blazarcoder`)
 - PipelineBuilder for hardware-specific GStreamer pipelines (Jetson, RK3588, N100, Generic)
 - Zod schemas for config/CLI
-- Process helpers: resolve executable, spawn ceracoder, send SIGHUP (reload), write config/pipeline files
+- Process helpers: resolve executable, spawn blazarcoder, send SIGHUP (reload), write config/pipeline files
 
 ### Step-by-step flow
 
@@ -163,7 +163,7 @@ Video Source (HDMI/USB/etc)
 2. **Pipeline construction**: Read a GStreamer pipeline description from a text file and call `gst_parse_launch()`.
 3. **Element binding**: Look up named elements:
    - `venc_bps` or `venc_kbps` → video encoder (for bitrate control)
-   - `appsink` → sink that hands buffers to ceracoder
+   - `appsink` → sink that hands buffers to blazarcoder
    - `overlay` (optional) → text overlay for on-screen stats
    - `a_delay` / `v_delay` (optional) → identity elements for PTS adjustment
    - `ptsfixup` (optional) → smooth PTS jitter for OBS compatibility
@@ -176,7 +176,7 @@ Video Source (HDMI/USB/etc)
 
 ## Signal Handling
 
-Ceracoder uses async-signal-safe signal handling:
+Blazarcoder uses async-signal-safe signal handling:
 
 - **SIGTERM/SIGINT**: Handled via `g_unix_signal_add()` which safely integrates with the GLib main loop
 - **SIGHUP**: Uses a volatile flag (`reload_config_flag`) that is checked in `stall_check()` to safely reload config file or bitrate settings
@@ -206,8 +206,8 @@ All resources are properly cleaned up on exit:
 | Balancer registry | `src/core/balancer_registry.c` | Algorithm lookup by name, default selection |
 | Adaptive algorithm | `src/core/balancer_adaptive.c`, `src/core/bitrate_control.c` | RTT/buffer-based adaptive control |
 | AIMD algorithm | `src/core/balancer_aimd.c` | TCP-style congestion control |
-| Connection monitor | `src/ceracoder.c:connection_housekeeping()` | ACK timeout detection, stats polling |
-| Stall detector | `src/ceracoder.c:stall_check()` | Exit on pipeline stall, config reload |
+| Connection monitor | `src/blazarcoder.c:connection_housekeeping()` | ACK timeout detection, stats polling |
+| Stall detector | `src/blazarcoder.c:stall_check()` | Exit on pipeline stall, config reload |
 
 ## GStreamer ↔ SRT Boundary
 
@@ -217,7 +217,7 @@ The codebase maintains clean separation between GStreamer and SRT concerns:
 - **SRT-dependent modules**: `srt_client`
 - **Independent modules**: `cli_options`, `config`, `balancer_*`
 
-The `ceracoder.c` main file orchestrates these modules but delegates specific responsibilities. The only direct coupling is the `appsink` callback pulling samples and forwarding them to SRT. This makes it feasible to swap the transport layer (e.g., RIST, WebRTC) without touching GStreamer code, or to swap the media engine without touching SRT code.
+The `blazarcoder.c` main file orchestrates these modules but delegates specific responsibilities. The only direct coupling is the `appsink` callback pulling samples and forwarding them to SRT. This makes it feasible to swap the transport layer (e.g., RIST, WebRTC) without touching GStreamer code, or to swap the media engine without touching SRT code.
 
 ## Testing
 
@@ -269,7 +269,7 @@ Pipeline files are plain-text GStreamer launch strings. They must include:
 
 | Element | Required | Purpose |
 |---------|----------|---------|
-| `appsink name=appsink` | Yes (for SRT output) | Hands buffers to ceracoder |
+| `appsink name=appsink` | Yes (for SRT output) | Hands buffers to blazarcoder |
 | `name=venc_bps` or `name=venc_kbps` | For dynamic bitrate | Encoder with runtime-settable `bitrate` property |
 | `name=overlay` | Optional | On-screen stats overlay |
 | `name=a_delay` / `name=v_delay` | Optional | A/V sync adjustment |
@@ -293,11 +293,11 @@ appsink name=appsink
 
 ## Network Bonding Integration
 
-Ceracoder is designed to work with [srtla](https://github.com/CERALIVE/srtla) for network bonding:
+Blazarcoder is designed to work with [srtla](https://github.com/blazarhq/srtla) for network bonding:
 
 ```
 ┌──────────────┐      ┌─────────┐      ┌──────────┐      ┌─────────────┐
-│ ceracoder    │─SRT─▶│ srtla   │─────▶│ Modem 1  │─────▶│             │
+│ blazarcoder  │─SRT─▶│ srtla   │─────▶│ Modem 1  │─────▶│             │
 │              │      │ (local) │─────▶│ Modem 2  │─────▶│ srtla_rec   │─SRT─▶ Server
 │              │      │         │─────▶│ Modem 3  │─────▶│             │
 └──────────────┘      └─────────┘      └──────────┘      └─────────────┘
@@ -305,11 +305,11 @@ Ceracoder is designed to work with [srtla](https://github.com/CERALIVE/srtla) fo
 
 When bonding multiple networks:
 
-1. **ceracoder** connects to localhost where srtla runs
+1. **blazarcoder** connects to localhost where srtla runs
 2. **srtla** splits packets across multiple network interfaces
 3. **srtla_rec** reassembles and forwards to the destination
 
-The bitrate controller adapts to the **aggregate capacity** of all bonded links. SRT's RTT and buffer metrics reflect the combined network state, so ceracoder automatically:
+The bitrate controller adapts to the **aggregate capacity** of all bonded links. SRT's RTT and buffer metrics reflect the combined network state, so blazarcoder automatically:
 - Reduces bitrate when a modem loses signal
 - Increases bitrate as aggregate capacity improves
 - Maintains stable streaming despite individual link fluctuations

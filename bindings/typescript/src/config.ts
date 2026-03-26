@@ -8,17 +8,17 @@ import {
 	DEFAULT_SRT_LATENCY,
 } from "./constants.js";
 import {
-	CeracoderConfig,
-	ceracoderConfigSchema,
-	PartialCeracoderConfig,
+	BlazarcoderConfig,
+	blazarcoderConfigSchema,
+	PartialBlazarcoderConfig,
 } from "./types.js";
 
-type MutableConfig = CeracoderConfig & {
-	general: CeracoderConfig["general"];
+type MutableConfig = BlazarcoderConfig & {
+	general: BlazarcoderConfig["general"];
 };
 
-function applyDefaults(input?: PartialCeracoderConfig): CeracoderConfig {
-	const parsed = ceracoderConfigSchema.parse(input ?? {});
+function applyDefaults(input?: PartialBlazarcoderConfig): BlazarcoderConfig {
+	const parsed = blazarcoderConfigSchema.parse(input ?? {});
 	const merged: MutableConfig = {
 		general: {
 			min_bitrate:
@@ -48,9 +48,9 @@ function applyDefaults(input?: PartialCeracoderConfig): CeracoderConfig {
 	return merged;
 }
 
-export function createCeracoderConfig(
-	input?: PartialCeracoderConfig,
-): CeracoderConfig {
+export function createBlazarcoderConfig(
+	input?: PartialBlazarcoderConfig,
+): BlazarcoderConfig {
 	return applyDefaults(input);
 }
 
@@ -62,7 +62,7 @@ function formatSection(name: string, kv: Record<string, string | number | undefi
 	return `[${name}]\n${lines.join("\n")}\n\n`;
 }
 
-export function serializeCeracoderConfig(config: CeracoderConfig): string {
+export function serializeBlazarcoderConfig(config: BlazarcoderConfig): string {
 	const general = formatSection("general", {
 		min_bitrate: config.general.min_bitrate,
 		max_bitrate: config.general.max_bitrate,
@@ -102,7 +102,7 @@ function parseSection(lines: Array<string>): Record<string, string> {
 	}, {});
 }
 
-export function parseCeracoderConfig(ini: string): CeracoderConfig {
+export function parseBlazarcoderConfig(ini: string): BlazarcoderConfig {
 	const sections: Record<string, Array<string>> = {};
 	let current: string | null = null;
 	ini.split(/\r?\n/).forEach((line) => {
@@ -123,11 +123,11 @@ export function parseCeracoderConfig(ini: string): CeracoderConfig {
 	const adaptiveRaw = parseSection(sections.adaptive ?? []);
 	const aimdRaw = parseSection(sections.aimd ?? []);
 
-	const parsed = ceracoderConfigSchema.parse({
+	const parsed = blazarcoderConfigSchema.parse({
 		general: {
 			min_bitrate: generalRaw.min_bitrate ? Number(generalRaw.min_bitrate) : undefined,
 			max_bitrate: generalRaw.max_bitrate ? Number(generalRaw.max_bitrate) : undefined,
-			balancer: generalRaw.balancer as z.infer<typeof ceracoderConfigSchema>["general"]["balancer"],
+			balancer: generalRaw.balancer as z.infer<typeof blazarcoderConfigSchema>["general"]["balancer"],
 		},
 		srt: {
 			latency: srtRaw.latency ? Number(srtRaw.latency) : undefined,
@@ -156,10 +156,10 @@ export function parseCeracoderConfig(ini: string): CeracoderConfig {
 	return applyDefaults(parsed);
 }
 
-export function buildCeracoderConfig(
-	input?: PartialCeracoderConfig,
-): { config: CeracoderConfig; ini: string } {
-	const config = createCeracoderConfig(input);
-	const ini = serializeCeracoderConfig(config);
+export function buildBlazarcoderConfig(
+	input?: PartialBlazarcoderConfig,
+): { config: BlazarcoderConfig; ini: string } {
+	const config = createBlazarcoderConfig(input);
+	const ini = serializeBlazarcoderConfig(config);
 	return { config, ini };
 }

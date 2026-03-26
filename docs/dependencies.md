@@ -1,6 +1,6 @@
-# Ceracoder Dependencies
+# Blazarcoder Dependencies
 
-This document lists all build-time and runtime dependencies for ceracoder, along with minimum compatible versions, package names for common distributions, and verification commands.
+This document lists all build-time and runtime dependencies for blazarcoder, along with minimum compatible versions, package names for common distributions, and verification commands.
 
 ## Quick Reference
 
@@ -11,11 +11,11 @@ This document lists all build-time and runtime dependencies for ceracoder, along
 | pkg-config | 0.25+ | Dependency detection |
 | GStreamer | 1.14+ | Media pipeline framework |
 | GLib | 2.40+ | Event loop, utilities (bundled with GStreamer) |
-| libsrt | 1.4.0+ | SRT protocol (recommend CERALIVE/srt fork) |
+| libsrt | 1.4.0+ | SRT protocol (recommend blazarhq/srt fork) |
 
 ## Build-time Dependencies (Always Required)
 
-These are needed to compile ceracoder from source.
+These are needed to compile blazarcoder from source.
 
 | Component | Ubuntu/Debian Package | Arch Package | Notes |
 |-----------|----------------------|--------------|-------|
@@ -44,7 +44,7 @@ pkg-config --libs gstreamer-1.0 gstreamer-app-1.0 srt
 
 ## Runtime Dependencies (Core)
 
-These are always needed to run ceracoder, regardless of which pipeline you use.
+These are always needed to run blazarcoder, regardless of which pipeline you use.
 
 | Component | Ubuntu/Debian Package | Arch Package | Notes |
 |-----------|----------------------|--------------|-------|
@@ -110,11 +110,11 @@ These require Rockchip's MPP (Media Process Platform) libraries and a compatible
 
 ## SRT Installation
 
-Ceracoder requires libsrt with specific BELABOX patches for optimal performance. We recommend building from the **CERALIVE/srt** fork:
+Blazarcoder requires libsrt with specific BELABOX patches for optimal performance. We recommend building from the **blazarhq/srt** fork:
 
 ```bash
-# Clone the CERALIVE/srt fork
-git clone https://github.com/CERALIVE/srt.git
+# Clone the blazarhq/srt fork
+git clone https://github.com/blazarhq/srt.git
 cd srt
 
 # Build and install to /usr/local (or /usr for system-wide)
@@ -128,9 +128,9 @@ sudo ldconfig
 pkg-config --modversion srt   # should print version ≥ 1.4.0
 ```
 
-### Why CERALIVE/srt?
+### Why blazarhq/srt?
 
-The [CERALIVE/srt](https://github.com/CERALIVE/srt) fork is described as an "up-to-date fork of the SRT shared library with BELABOX changes." It includes patches that improve behavior for the ceracoder use case, particularly around:
+The [blazarhq/srt](https://github.com/blazarhq/srt) fork is described as an "up-to-date fork of the SRT shared library with BELABOX changes." It includes patches that improve behavior for the blazarcoder use case, particularly around:
 
 - Retransmission algorithm tuning
 - Statistics reporting
@@ -152,7 +152,7 @@ sudo apt-get install libsrt-dev
 | 1.5.x | Supported | Recommended; includes connection bonding |
 | < 1.4.0 | **Not supported** | Compile will fail with `#error` |
 
-> **Compile-time enforcement:** ceracoder includes a preprocessor check that fails compilation if `SRT_VERSION_VALUE < 1.4.0`. This ensures you get a clear error message instead of confusing link-time or runtime failures.
+> **Compile-time enforcement:** blazarcoder includes a preprocessor check that fails compilation if `SRT_VERSION_VALUE < 1.4.0`. This ensures you get a clear error message instead of confusing link-time or runtime failures.
 
 ## Minimum Version Rationale
 
@@ -160,7 +160,7 @@ sudo apt-get install libsrt-dev
 |------------|-------------|--------|
 | GStreamer 1.14 | API stability | `gst_app_sink_set_callbacks`, `gst_buffer_map` API |
 | GLib 2.40 | — | Required by GStreamer 1.14+ |
-| libsrt 1.4.0 | `SRTO_RETRANSMITALGO` | ceracoder sets `SRTO_RETRANSMITALGO = 1` |
+| libsrt 1.4.0 | `SRTO_RETRANSMITALGO` | blazarcoder sets `SRTO_RETRANSMITALGO = 1` |
 | GCC 4.9 / Clang 3.5 | C99 | Code uses C99 features (mixed declarations, `//` comments) |
 
 ## Complete Install (Ubuntu 20.04+)
@@ -180,16 +180,16 @@ sudo apt-get install -y \
   gstreamer1.0-plugins-ugly \
   gstreamer1.0-libav
 
-# SRT (from CERALIVE fork)
-git clone https://github.com/CERALIVE/srt.git /tmp/srt
+# SRT (from Blazar fork)
+git clone https://github.com/blazarhq/srt.git /tmp/srt
 cd /tmp/srt && mkdir build && cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 make -j$(nproc)
 sudo make install
 sudo ldconfig
 
-# Build ceracoder
-cd /path/to/ceracoder
+# Build blazarcoder
+cd /path/to/blazarcoder
 make
 ```
 
@@ -235,7 +235,7 @@ make test_all
 
 ## Development Dependencies (Optional)
 
-These tools are useful for development and code quality but not required for building or running ceracoder:
+These tools are useful for development and code quality but not required for building or running blazarcoder:
 
 | Tool | Ubuntu/Debian Package | Arch Package | Purpose |
 |------|----------------------|--------------|---------|
@@ -272,15 +272,15 @@ sudo pacman -S base-devel git pkgconf cmake openssl \
   gstreamer gst-plugins-base gst-plugins-good \
   gst-plugins-bad gst-plugins-ugly gst-libav
 
-# SRT (from CERALIVE fork)
-git clone https://github.com/CERALIVE/srt.git /tmp/srt
+# SRT (from Blazar fork)
+git clone https://github.com/blazarhq/srt.git /tmp/srt
 cd /tmp/srt && mkdir build && cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 make -j$(nproc)
 sudo make install
 
-# Build ceracoder
-cd /path/to/ceracoder
+# Build blazarcoder
+cd /path/to/blazarcoder
 make
 ```
 

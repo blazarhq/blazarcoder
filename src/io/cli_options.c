@@ -1,7 +1,8 @@
 /*
-    ceracoder - live video encoder with dynamic bitrate control
+    blazarcoder - live video encoder with dynamic bitrate control
     Copyright (C) 2020 BELABOX project
     Copyright (C) 2026 CERALIVE
+    Copyright (C) 2026 Blazar Interactive (forked and modified)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -56,7 +57,7 @@ static int parse_long(const char *str, long *result, long min_val, long max_val)
 }
 
 void cli_options_print_usage(void) {
-    fprintf(stderr, "Syntax: ceracoder PIPELINE_FILE ADDR PORT [options]\n\n");
+    fprintf(stderr, "Syntax: blazarcoder PIPELINE_FILE ADDR PORT [options]\n\n");
     fprintf(stderr, "Options:\n");
     fprintf(stderr, "  -v                  Print the version and exit\n");
     fprintf(stderr, "  -c <config file>    Configuration file (INI format)\n");

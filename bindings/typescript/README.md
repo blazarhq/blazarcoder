@@ -1,18 +1,18 @@
-# @ceralive/ceracoder (TypeScript bindings)
+# @blazarbox/blazarcoder (TypeScript bindings)
 
-Type-safe helpers for ceracoder integration:
+Type-safe helpers for blazarcoder integration:
 
 - Zod v4 schemas for config and CLI options
-- Defaults aligned with the ceracoder C implementation
-- Config generator (`buildCeracoderConfig`, `serializeCeracoderConfig`)
-- CLI args builder (`buildCeracoderArgs`) that always prefers `-c <config>` (legacy `-b` removed)
+- Defaults aligned with the blazarcoder C implementation
+- Config generator (`buildBlazarcoderConfig`, `serializeBlazarcoderConfig`)
+- CLI args builder (`buildBlazarcoderArgs`) that always prefers `-c <config>` (legacy `-b` removed)
 - Pipeline builder (`PipelineBuilder`) to generate hardware-specific GStreamer launch strings
-- Process helpers (`spawnCeracoder`, `sendHup`, `sendTerm`, `writeConfig`, `writePipeline`)
+- Process helpers (`spawnBlazarcoder`, `sendHup`, `sendTerm`, `writeConfig`, `writePipeline`)
 
 ## Pipeline Builder
 
 ```ts
-import { PipelineBuilder } from "@ceralive/ceracoder";
+import { PipelineBuilder } from "@blazarbox/blazarcoder";
 
 const result = PipelineBuilder.build({
   hardware: "rk3588",
@@ -31,28 +31,28 @@ Helpers:
 Notes:
 - Pipelines are validated to contain `appsink` and encoder elements (`venc_bps`/`venc_kbps`)
 - Resolution/framerate defaults come from per-source metadata
-- `writeTo` writes the pipeline string to disk (for ceracoder `-p <file>`)
+- `writeTo` writes the pipeline string to disk (for blazarcoder `-p <file>`)
 
 ## Usage
 
 ```ts
 import {
-  buildCeracoderArgs,
-  buildCeracoderConfig,
-  serializeCeracoderConfig,
-} from "@ceralive/ceracoder";
+  buildBlazarcoderArgs,
+  buildBlazarcoderConfig,
+  serializeBlazarcoderConfig,
+} from "@blazarbox/blazarcoder";
 
-const { config, ini } = buildCeracoderConfig({
+const { config, ini } = buildBlazarcoderConfig({
   general: { max_bitrate: 6000 },
   srt: { latency: 2000 },
 });
 
-// Write ini to ceracoder.conf, then run ceracoder
-const args = buildCeracoderArgs({
-  pipelineFile: "/usr/share/ceracoder/pipelines/generic/h264_camlink_1080p",
+// Write ini to blazarcoder.conf, then run blazarcoder
+const args = buildBlazarcoderArgs({
+  pipelineFile: "/usr/share/blazarcoder/pipelines/generic/h264_camlink_1080p",
   host: "127.0.0.1",
   port: 9000,
-  configFile: "/tmp/ceracoder.conf",
+  configFile: "/tmp/blazarcoder.conf",
   latencyMs: config.srt.latency,
   algorithm: config.general.balancer,
 });

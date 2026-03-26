@@ -1,14 +1,14 @@
-import { buildCeracoderConfig, parseCeracoderConfig, serializeCeracoderConfig } from "./config.js";
-import { buildCeracoderArgs } from "./cli.js";
-import type { PartialCeracoderConfig, CeracoderConfig, CeracoderCliOptions } from "./types.js";
+import { buildBlazarcoderConfig, parseBlazarcoderConfig, serializeBlazarcoderConfig } from "./config.js";
+import { buildBlazarcoderArgs } from "./cli.js";
+import type { PartialBlazarcoderConfig, BlazarcoderConfig, BlazarcoderCliOptions } from "./types.js";
 import fs from "node:fs";
 
-export type CeracoderRunInput = {
+export type BlazarcoderRunInput = {
 	pipelineFile: string;
 	host: string;
 	port: number;
 	configFile: string;
-	config?: PartialCeracoderConfig;
+	config?: PartialBlazarcoderConfig;
 	/**
 	 * If true, ignore existing config file and require a full config payload.
 	 * If false (default), merge provided fields into existing config (if present).
@@ -18,30 +18,30 @@ export type CeracoderRunInput = {
 	streamId?: string;
 	latencyMs?: number;
 	reducedPacketSize?: boolean;
-	algorithm?: CeracoderCliOptions["algorithm"];
+	algorithm?: BlazarcoderCliOptions["algorithm"];
 };
 
-export type CeracoderRunArtifacts = {
-	config: CeracoderConfig;
+export type BlazarcoderRunArtifacts = {
+	config: BlazarcoderConfig;
 	ini: string;
 	args: Array<string>;
 };
 
 /**
- * Build ceracoder runtime artifacts (config object, INI text, CLI args).
+ * Build blazarcoder runtime artifacts (config object, INI text, CLI args).
  * Does NOT perform any filesystem writes—callers can persist the INI as needed.
  */
-export function buildCeracoderRunArtifacts(
-	input: CeracoderRunInput,
-): CeracoderRunArtifacts {
-	let baseConfig: PartialCeracoderConfig | undefined;
+export function buildBlazarcoderRunArtifacts(
+	input: BlazarcoderRunInput,
+): BlazarcoderRunArtifacts {
+	let baseConfig: PartialBlazarcoderConfig | undefined;
 
 	const fullOverride = input.fullOverride ?? false;
 
 	if (!fullOverride) {
 		try {
 			const existing = fs.readFileSync(input.configFile, "utf8");
-			baseConfig = parseCeracoderConfig(existing);
+			baseConfig = parseBlazarcoderConfig(existing);
 		} catch {
 			baseConfig = undefined;
 		}
@@ -51,7 +51,7 @@ export function buildCeracoderRunArtifacts(
 		throw new Error("Full override requested but no config provided");
 	}
 
-	let mergedConfig: PartialCeracoderConfig;
+	let mergedConfig: PartialBlazarcoderConfig;
 
 	if (fullOverride) {
 		mergedConfig = input.config!;
@@ -86,9 +86,9 @@ export function buildCeracoderRunArtifacts(
 		}
 	}
 
-	const { config, ini } = buildCeracoderConfig(mergedConfig);
+	const { config, ini } = buildBlazarcoderConfig(mergedConfig);
 
-	const args = buildCeracoderArgs({
+	const args = buildBlazarcoderArgs({
 		pipelineFile: input.pipelineFile,
 		host: input.host,
 		port: input.port,

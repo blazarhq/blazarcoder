@@ -113,36 +113,36 @@ jobs:
 
           # Create .deb package
           fpm -s dir -t deb \
-            -n ceracoder \
+            -n blazarcoder \
             -v "${VERSION}" \
             -a "${ARCH}" \
             --description "Live video encoder with dynamic bitrate control and SRT support" \
-            --maintainer "CERALIVE <contact@ceralive.com>" \
-            --url "https://github.com/CERALIVE/ceracoder" \
+            --maintainer "BLAZAR <hey@blazar.one>" \
+            --url "https://github.com/blazarhq/blazarcoder" \
             --license "GPL-3.0" \
             --depends "srtla" \
             --depends "gstlibuvch264src" \
             --depends "libgstreamer1.0-0" \
             --depends "libgstreamer-plugins-base1.0-0" \
-            -p "dist/ceracoder_${VERSION}_${ARCH}.deb" \
+            -p "dist/blazarcoder_${VERSION}_${ARCH}.deb" \
             build-output/usr/=/usr/
 
           # Create .tar.gz archive
-          mkdir -p tarball/ceracoder-${VERSION}
-          cp -r build-output/usr/* tarball/ceracoder-${VERSION}/
+          mkdir -p tarball/blazarcoder-${VERSION}
+          cp -r build-output/usr/* tarball/blazarcoder-${VERSION}/
           cd tarball
-          tar -czvf ../dist/ceracoder_${VERSION}_${ARCH}.tar.gz ceracoder-${VERSION}
+          tar -czvf ../dist/blazarcoder_${VERSION}_${ARCH}.tar.gz blazarcoder-${VERSION}
           cd ..
 
           # Create checksums
           cd dist
-          sha256sum ceracoder_${VERSION}_${ARCH}.deb > ceracoder_${VERSION}_${ARCH}.deb.sha256
-          sha256sum ceracoder_${VERSION}_${ARCH}.tar.gz > ceracoder_${VERSION}_${ARCH}.tar.gz.sha256
+          sha256sum blazarcoder_${VERSION}_${ARCH}.deb > blazarcoder_${VERSION}_${ARCH}.deb.sha256
+          sha256sum blazarcoder_${VERSION}_${ARCH}.tar.gz > blazarcoder_${VERSION}_${ARCH}.tar.gz.sha256
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ceracoder-${{ matrix.arch }}
+          name: blazarcoder-${{ matrix.arch }}
           path: |
             dist/*.deb
             dist/*.tar.gz
@@ -161,12 +161,12 @@ jobs:
       - name: Prepare dist directory
         run: |
           mkdir -p dist/arm64 dist/amd64 dist/release
-          mv artifacts/ceracoder-arm64/*.deb dist/arm64/
-          mv artifacts/ceracoder-amd64/*.deb dist/amd64/
-          cp artifacts/ceracoder-arm64/*.tar.gz dist/release/
-          cp artifacts/ceracoder-amd64/*.tar.gz dist/release/
-          cp artifacts/ceracoder-arm64/*.sha256 dist/release/
-          cp artifacts/ceracoder-amd64/*.sha256 dist/release/
+          mv artifacts/blazarcoder-arm64/*.deb dist/arm64/
+          mv artifacts/blazarcoder-amd64/*.deb dist/amd64/
+          cp artifacts/blazarcoder-arm64/*.tar.gz dist/release/
+          cp artifacts/blazarcoder-amd64/*.tar.gz dist/release/
+          cp artifacts/blazarcoder-arm64/*.sha256 dist/release/
+          cp artifacts/blazarcoder-amd64/*.sha256 dist/release/
 
       - name: Import GPG key
         run: |
@@ -219,7 +219,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.calculate-version.outputs.version }}
-          name: ceracoder v${{ needs.calculate-version.outputs.version }}
+          name: blazarcoder v${{ needs.calculate-version.outputs.version }}
           prerelease: ${{ needs.calculate-version.outputs.channel == 'beta' }}
           files: |
             dist/arm64/*.deb
@@ -227,7 +227,7 @@ jobs:
             dist/release/*.tar.gz
             dist/release/*.sha256
           body: |
-            ## ceracoder v${{ needs.calculate-version.outputs.version }}
+            ## blazarcoder v${{ needs.calculate-version.outputs.version }}
 
             Live video encoder with dynamic bitrate control and SRT support.
 
@@ -235,11 +235,11 @@ jobs:
             ```
             srt
               └── srtla
-                    └── ceracoder (this package)
+                    └── blazarcoder (this package)
                           ├── Depends: srtla, gstlibuvch264src
                           ├── Depends: libgstreamer1.0-0, libgstreamer-plugins-base1.0-0
                           │
-                          └── Used by: ceralive-device
+                          └── Used by: blazarbox-device
             
             gstlibuvch264src ──┘
             ```
@@ -247,25 +247,25 @@ jobs:
             ### Debian Packages
             | Architecture | Package |
             |--------------|---------|
-            | ARM64 | `ceracoder_${{ needs.calculate-version.outputs.version }}_arm64.deb` |
-            | AMD64 | `ceracoder_${{ needs.calculate-version.outputs.version }}_amd64.deb` |
+            | ARM64 | `blazarcoder_${{ needs.calculate-version.outputs.version }}_arm64.deb` |
+            | AMD64 | `blazarcoder_${{ needs.calculate-version.outputs.version }}_amd64.deb` |
 
             ### Binary Archives
             | Architecture | Archive |
             |--------------|---------|
-            | ARM64 | `ceracoder_${{ needs.calculate-version.outputs.version }}_arm64.tar.gz` |
-            | AMD64 | `ceracoder_${{ needs.calculate-version.outputs.version }}_amd64.tar.gz` |
+            | ARM64 | `blazarcoder_${{ needs.calculate-version.outputs.version }}_arm64.tar.gz` |
+            | AMD64 | `blazarcoder_${{ needs.calculate-version.outputs.version }}_amd64.tar.gz` |
 
             ### Installation
 
             **Debian/Ubuntu:**
             ```bash
-            sudo dpkg -i ceracoder_${{ needs.calculate-version.outputs.version }}_<arch>.deb
+            sudo dpkg -i blazarcoder_${{ needs.calculate-version.outputs.version }}_<arch>.deb
             sudo apt-get install -f  # Install dependencies
             ```
 
             **Manual:**
             ```bash
-            tar -xzf ceracoder_${{ needs.calculate-version.outputs.version }}_<arch>.tar.gz
-            sudo cp -r ceracoder-${{ needs.calculate-version.outputs.version }}/* /usr/
+            tar -xzf blazarcoder_${{ needs.calculate-version.outputs.version }}_<arch>.tar.gz
+            sudo cp -r blazarcoder-${{ needs.calculate-version.outputs.version }}/* /usr/
             ```

@@ -1,10 +1,10 @@
-# Ceracoder Versioning
+# Blazarcoder Versioning
 
-This document describes the versioning scheme used for Ceracoder releases.
+This document describes the versioning scheme used for Blazarcoder releases.
 
 ## Overview
 
-Ceracoder uses **Calendar Versioning (CalVer)** with automatic version detection, matching the versioning scheme used in [CeraUI](https://github.com/CERALIVE/CeraUI).
+Blazarcoder uses **Calendar Versioning (CalVer)** with automatic version detection, matching the versioning scheme used in [BlazarUI](https://github.com/blazarhq/BlazarUI).
 
 ## Version Format
 
@@ -65,7 +65,7 @@ January 2026:
 
 Releases are created through GitHub Actions workflow dispatch:
 
-1. Navigate to **Actions** → **Build and Release Ceracoder**
+1. Navigate to **Actions** → **Build and Release Blazarcoder**
 2. Click **Run workflow**
 3. Select parameters:
    - **Release type**: `stable` or `beta`
@@ -105,7 +105,7 @@ CFLAGS=... -DVERSION=\"$(VERSION)\" ...
 To display the version:
 
 ```bash
-ceracoder -v
+blazarcoder -v
 ```
 
 ## Release Workflow Details
@@ -126,7 +126,7 @@ ceracoder -v
    - Outputs: `version`, `version_tag`, `is_beta`
 
 2. **build-release** (matrix: x86_64, arm64)
-   - Builds ceracoder binary for each architecture
+   - Builds blazarcoder binary for each architecture
    - Creates compressed `.tar.gz` archives
    - Generates SHA256 checksums
    - Uploads artifacts
@@ -147,7 +147,7 @@ Debian packages use the same CalVer versioning scheme. The `publish-deb.yml` wor
 
 - Automatically calculates the CalVer version
 - Builds ARM64 Debian packages
-- Packages are named: `ceracoder_YYYY.M.patch_arm64.deb` or `ceracoder_YYYY.M.patch-beta.N_arm64.deb`
+- Packages are named: `blazarcoder_YYYY.M.patch_arm64.deb` or `blazarcoder_YYYY.M.patch-beta.N_arm64.deb`
 
 To trigger a Debian package build:
 
@@ -161,11 +161,11 @@ git push origin master
 
 ## Migration from Previous Versioning
 
-Ceracoder previously used git commit hashes as versions. The new CalVer system:
+Blazarcoder previously used git commit hashes as versions. The new CalVer system:
 
 - Provides human-readable version numbers
 - Enables proper version ordering and comparison
-- Aligns with CeraUI's versioning scheme
+- Aligns with BlazarUI's versioning scheme
 - Supports both stable and beta release channels
 - Integrates with Debian package management
 
@@ -223,7 +223,7 @@ If beta versioning is incorrect:
 
 ## Related Documentation
 
-- [CeraUI Versioning](https://github.com/CERALIVE/CeraUI/blob/master/docs/BUILD_PIPELINE.md) - Reference implementation
+- [BlazarUI Versioning](https://github.com/blazarhq/BlazarUI/blob/master/docs/BUILD_PIPELINE.md) - Reference implementation
 - [GitHub Actions Workflows](../.github/workflows/) - Workflow definitions
 - [Makefile](../Makefile) - Build configuration with VERSION macro
 
@@ -232,7 +232,7 @@ If beta versioning is incorrect:
 ### Creating a Stable Release
 
 ```bash
-# 1. Go to GitHub Actions → Build and Release Ceracoder
+# 1. Go to GitHub Actions → Build and Release Blazarcoder
 # 2. Select:
 #    - release_type: stable
 #    - release_notes: "Added SRT statistics logging"
@@ -244,7 +244,7 @@ If beta versioning is incorrect:
 ### Creating a Beta Release
 
 ```bash
-# 1. Go to GitHub Actions → Build and Release Ceracoder
+# 1. Go to GitHub Actions → Build and Release Blazarcoder
 # 2. Select:
 #    - release_type: beta
 #    - release_notes: "Testing new bitrate algorithm"
@@ -256,7 +256,7 @@ If beta versioning is incorrect:
 ### Force a Specific Version
 
 ```bash
-# 1. Go to GitHub Actions → Build and Release Ceracoder
+# 1. Go to GitHub Actions → Build and Release Blazarcoder
 # 2. Select:
 #    - release_type: stable
 #    - release_notes: "Hotfix for critical bug"
@@ -268,4 +268,4 @@ If beta versioning is incorrect:
 
 ---
 
-For questions or issues with versioning, please open an issue on [GitHub](https://github.com/CERALIVE/ceracoder/issues).
+For questions or issues with versioning, please open an issue on [GitHub](https://github.com/blazarhq/blazarcoder/issues).

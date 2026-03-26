@@ -18,6 +18,6 @@ export const DEFAULT_AIMD = {
 	decr_interval: 200,
 } as const;
 
-export const DEFAULT_PIPELINE_ROOT = "/usr/share/ceracoder/pipelines";
-export const TEMP_PIPELINE_PATH = "/tmp/ceracoder_pipeline";
-export const DEFAULT_CONFIG_PATH = "/tmp/ceracoder.conf";
+export const DEFAULT_PIPELINE_ROOT = "/usr/share/blazarcoder/pipelines";
+export const TEMP_PIPELINE_PATH = "/tmp/blazarcoder_pipeline";
+export const DEFAULT_CONFIG_PATH = "/tmp/blazarcoder.conf";
