@@ -12,7 +12,7 @@ SRCDIR = src
 TESTDIR = tests
 
 # Object files
-OBJS = $(SRCDIR)/ceracoder.o \
+OBJS = $(SRCDIR)/blazarcoder.o \
        $(SRCDIR)/io/cli_options.o \
        $(SRCDIR)/io/pipeline_loader.o \
        $(SRCDIR)/net/srt_client.o \
@@ -28,15 +28,15 @@ OBJS = $(SRCDIR)/ceracoder.o \
        camlink_workaround/camlink.o
 
 # Test object files (exclude main)
-TEST_OBJS = $(filter-out $(SRCDIR)/ceracoder.o, $(OBJS))
+TEST_OBJS = $(filter-out $(SRCDIR)/blazarcoder.o, $(OBJS))
 
-all: submodule ceracoder
+all: submodule blazarcoder
 
 submodule:
 	git submodule init
 	git submodule update
 
-ceracoder: $(OBJS)
+blazarcoder: $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 # Compile source files (matches subdirectories too)
@@ -77,7 +77,7 @@ lint:
 		-- $(CFLAGS)
 
 clean:
-	rm -f ceracoder \
+	rm -f blazarcoder \
 		$(SRCDIR)/*.o $(SRCDIR)/core/*.o $(SRCDIR)/io/*.o $(SRCDIR)/net/*.o $(SRCDIR)/gst/*.o \
 		$(TESTDIR)/*.o $(TESTDIR)/test_balancer $(TESTDIR)/test_integration $(TESTDIR)/test_srt $(TESTDIR)/test_srt_live_transmit camlink_workaround/*.o
 

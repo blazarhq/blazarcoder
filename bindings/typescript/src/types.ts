@@ -30,7 +30,7 @@ export const aimdSchema = z
 	})
 	.optional();
 
-export const ceracoderConfigSchema = z.object({
+export const blazarcoderConfigSchema = z.object({
 	general: z.object({
 		min_bitrate: z.number().int().min(1).default(DEFAULT_MIN_BITRATE),
 		max_bitrate: z.number().int().min(1).default(DEFAULT_MAX_BITRATE),
@@ -50,8 +50,8 @@ export const ceracoderConfigSchema = z.object({
 	aimd: aimdSchema,
 });
 
-export type CeracoderConfig = z.infer<typeof ceracoderConfigSchema>;
-export type PartialCeracoderConfig = z.input<typeof ceracoderConfigSchema>;
+export type BlazarcoderConfig = z.infer<typeof blazarcoderConfigSchema>;
+export type PartialBlazarcoderConfig = z.input<typeof blazarcoderConfigSchema>;
 
 // CLI options
 export const cliOptionsSchema = z.object({
@@ -66,4 +66,4 @@ export const cliOptionsSchema = z.object({
 	algorithm: balancerAlgorithmSchema.optional(),
 });
 
-export type CeracoderCliOptions = z.infer<typeof cliOptionsSchema>;
+export type BlazarcoderCliOptions = z.infer<typeof cliOptionsSchema>;

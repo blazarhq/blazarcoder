@@ -1,7 +1,7 @@
 /**
- * Process management for ceracoder
+ * Process management for blazarcoder
  *
- * Provides utilities for finding, spawning, and signaling the ceracoder process.
+ * Provides utilities for finding, spawning, and signaling the blazarcoder process.
  */
 
 import {
@@ -14,10 +14,10 @@ import fs from "node:fs";
 import path from "node:path";
 
 // Default paths
-const DEFAULT_EXEC_NAME = "ceracoder";
-const DEFAULT_SYSTEM_PATH = "/usr/bin/ceracoder";
-const DEFAULT_CONFIG_PATH = "/tmp/ceracoder.conf";
-const DEFAULT_PIPELINE_PATH = "/tmp/ceracoder_pipeline";
+const DEFAULT_EXEC_NAME = "blazarcoder";
+const DEFAULT_SYSTEM_PATH = "/usr/bin/blazarcoder";
+const DEFAULT_CONFIG_PATH = "/tmp/blazarcoder.conf";
+const DEFAULT_PIPELINE_PATH = "/tmp/blazarcoder_pipeline";
 
 /**
  * Try to find an executable in the system PATH using 'which' (Unix) or 'where' (Windows).
@@ -43,27 +43,27 @@ function findInPath(binaryName: string): string | undefined {
 }
 
 /**
- * Options for finding the ceracoder executable
+ * Options for finding the blazarcoder executable
  */
-export interface CeracoderPathOptions {
+export interface BlazarcoderPathOptions {
 	/**
-	 * Explicit path to ceracoder executable or directory containing it.
-	 * If a directory, ceracoder binary is expected inside.
+	 * Explicit path to blazarcoder executable or directory containing it.
+	 * If a directory, blazarcoder binary is expected inside.
 	 */
 	execPath?: string;
 }
 
 /**
- * Resolve the full path to the ceracoder executable
+ * Resolve the full path to the blazarcoder executable
  *
  * Resolution order:
  * 1. If execPath is provided and is a file, use it directly
- * 2. If execPath is a directory, look for ceracoder inside
+ * 2. If execPath is a directory, look for blazarcoder inside
  * 3. Try to auto-detect from system PATH using 'which'/'where'
- * 4. Check if /usr/bin/ceracoder exists
- * 5. Fall back to "ceracoder" (let PATH decide at spawn time)
+ * 4. Check if /usr/bin/blazarcoder exists
+ * 5. Fall back to "blazarcoder" (let PATH decide at spawn time)
  */
-export function getCeracoderExec(options: CeracoderPathOptions = {}): string {
+export function getBlazarcoderExec(options: BlazarcoderPathOptions = {}): string {
 	const { execPath } = options;
 
 	// If explicit path provided
@@ -72,7 +72,7 @@ export function getCeracoderExec(options: CeracoderPathOptions = {}): string {
 		if (fs.existsSync(execPath) && fs.statSync(execPath).isFile()) {
 			return execPath;
 		}
-		// Check if it's a directory containing ceracoder
+		// Check if it's a directory containing blazarcoder
 		const inDir = path.join(execPath, DEFAULT_EXEC_NAME);
 		if (fs.existsSync(inDir) && fs.statSync(inDir).isFile()) {
 			return inDir;
@@ -99,9 +99,9 @@ export function getCeracoderExec(options: CeracoderPathOptions = {}): string {
 }
 
 /**
- * Default paths used by ceracoder
+ * Default paths used by blazarcoder
  */
-export const CERACODER_PATHS = {
+export const BLAZARCODER_PATHS = {
 	/** Default config file path */
 	config: DEFAULT_CONFIG_PATH,
 	/** Default pipeline file path */
@@ -111,9 +111,9 @@ export const CERACODER_PATHS = {
 } as const;
 
 /**
- * Options for spawning ceracoder
+ * Options for spawning blazarcoder
  */
-export interface SpawnCeracoderOptions extends CeracoderPathOptions {
+export interface SpawnBlazarcoderOptions extends BlazarcoderPathOptions {
 	/** Command line arguments */
 	args: string[];
 	/** Spawn options (stdio, cwd, env, etc.) */
@@ -121,20 +121,20 @@ export interface SpawnCeracoderOptions extends CeracoderPathOptions {
 }
 
 /**
- * Spawn a ceracoder process
+ * Spawn a blazarcoder process
  *
  * @param options - Spawn options including args and path
  * @returns ChildProcess instance
  */
-export function spawnCeracoder(options: SpawnCeracoderOptions): ChildProcess {
-	const exec = getCeracoderExec(options);
+export function spawnBlazarcoder(options: SpawnBlazarcoderOptions): ChildProcess {
+	const exec = getBlazarcoderExec(options);
 	return spawn(exec, options.args, options.spawnOptions ?? {});
 }
 
 /**
- * Options for sending signals to ceracoder
+ * Options for sending signals to blazarcoder
  */
-export interface SignalCeracoderOptions {
+export interface SignalBlazarcoderOptions {
 	/**
 	 * Custom killall function.
 	 * By default, uses the system killall command.
@@ -144,12 +144,12 @@ export interface SignalCeracoderOptions {
 }
 
 /**
- * Send SIGHUP to reload ceracoder config
+ * Send SIGHUP to reload blazarcoder config
  *
- * Uses killall -HUP ceracoder by default.
+ * Uses killall -HUP blazarcoder by default.
  * The config file is re-read when SIGHUP is received.
  */
-export async function sendHup(options: SignalCeracoderOptions = {}): Promise<void> {
+export async function sendHup(options: SignalBlazarcoderOptions = {}): Promise<void> {
 	const { killall } = options;
 
 	if (killall) {
@@ -170,9 +170,9 @@ export async function sendHup(options: SignalCeracoderOptions = {}): Promise<voi
 }
 
 /**
- * Send SIGTERM to gracefully stop ceracoder
+ * Send SIGTERM to gracefully stop blazarcoder
  */
-export async function sendTerm(options: SignalCeracoderOptions = {}): Promise<void> {
+export async function sendTerm(options: SignalBlazarcoderOptions = {}): Promise<void> {
 	const { killall } = options;
 
 	if (killall) {
@@ -189,7 +189,7 @@ export async function sendTerm(options: SignalCeracoderOptions = {}): Promise<vo
 }
 
 /**
- * Check if ceracoder is currently running
+ * Check if blazarcoder is currently running
  */
 export async function isRunning(): Promise<boolean> {
 	return new Promise((resolve) => {

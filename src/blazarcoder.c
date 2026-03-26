@@ -1,9 +1,10 @@
 /*
-    ceracoder - live video encoder with dynamic bitrate control
+    blazarcoder - live video encoder with dynamic bitrate control
     Forked from irlserver/belacoder, itself a fork of BELABOX/belacoder
     
     Copyright (C) 2020 BELABOX project
     Copyright (C) 2026 CERALIVE
+    Copyright (C) 2026 Blazar Interactive (forked and modified)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

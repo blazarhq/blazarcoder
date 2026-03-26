@@ -3,19 +3,19 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-import { buildCeracoderRunArtifacts } from "./run.js";
-import { serializeCeracoderConfig } from "./config.js";
+import { buildBlazarcoderRunArtifacts } from "./run.js";
+import { serializeBlazarcoderConfig } from "./config.js";
 import { DEFAULT_ADAPTIVE, DEFAULT_AIMD } from "./constants.js";
 
 function tmpFile(contents: string) {
-	const p = path.join(os.tmpdir(), `ceracoder_test_${Date.now()}_${Math.random()}.conf`);
+	const p = path.join(os.tmpdir(), `blazarcoder_test_${Date.now()}_${Math.random()}.conf`);
 	fs.writeFileSync(p, contents);
 	return p;
 }
 
-describe("buildCeracoderRunArtifacts", () => {
+describe("buildBlazarcoderRunArtifacts", () => {
 	it("merges with existing config when fullOverride=false", () => {
-		const existingIni = serializeCeracoderConfig({
+		const existingIni = serializeBlazarcoderConfig({
 			general: { min_bitrate: 400, max_bitrate: 5000, balancer: "adaptive" },
 			srt: { latency: 1500 },
 			adaptive: { ...DEFAULT_ADAPTIVE, incr_step: 10 },
@@ -23,7 +23,7 @@ describe("buildCeracoderRunArtifacts", () => {
 		});
 		const cfgPath = tmpFile(existingIni);
 
-		const { config } = buildCeracoderRunArtifacts({
+		const { config } = buildBlazarcoderRunArtifacts({
 			pipelineFile: "p",
 			host: "h",
 			port: 1,
@@ -38,7 +38,7 @@ describe("buildCeracoderRunArtifacts", () => {
 
 	it("requires adaptive when balancer=adaptive in full override", () => {
 		expect(() =>
-			buildCeracoderRunArtifacts({
+			buildBlazarcoderRunArtifacts({
 				pipelineFile: "p",
 				host: "h",
 				port: 1,
@@ -54,7 +54,7 @@ describe("buildCeracoderRunArtifacts", () => {
 
 	it("requires aimd when balancer=aimd in full override", () => {
 		expect(() =>
-			buildCeracoderRunArtifacts({
+			buildBlazarcoderRunArtifacts({
 				pipelineFile: "p",
 				host: "h",
 				port: 1,
@@ -69,7 +69,7 @@ describe("buildCeracoderRunArtifacts", () => {
 	});
 
 	it("succeeds in full override when required sections provided", () => {
-		const { config } = buildCeracoderRunArtifacts({
+		const { config } = buildBlazarcoderRunArtifacts({
 			pipelineFile: "p",
 			host: "h",
 			port: 1,

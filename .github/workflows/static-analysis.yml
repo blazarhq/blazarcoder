@@ -28,7 +28,7 @@ jobs:
       
       - name: Install SRT library
         run: |
-          git clone https://github.com/CERALIVE/srt.git /tmp/srt
+          git clone https://github.com/blazarhq/srt.git /tmp/srt
           cd /tmp/srt
           mkdir build && cd build
           cmake .. -DCMAKE_INSTALL_PREFIX=/usr

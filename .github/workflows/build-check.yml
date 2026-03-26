@@ -18,16 +18,16 @@ jobs:
           - arch: arm64
             runner: ubuntu-24.04-arm
     steps:
-      - name: Checkout ceracoder
+      - name: Checkout blazarcoder
         uses: actions/checkout@v4
         with:
-          path: ceracoder
+          path: blazarcoder
           submodules: recursive
 
       - name: Checkout SRT (dependency)
         uses: actions/checkout@v4
         with:
-          repository: CERALIVE/srt
+          repository: blazarhq/srt
           path: srt
 
       - name: Install build dependencies
@@ -56,15 +56,15 @@ jobs:
           cmake --build build -j$(nproc)
           sudo cmake --install build
 
-      - name: Build ceracoder
+      - name: Build blazarcoder
         run: |
-          cd ceracoder
-          make ceracoder
+          cd blazarcoder
+          make blazarcoder
 
       - name: Verify binary was built
         run: |
-          ls -la ceracoder/ceracoder
-          file ceracoder/ceracoder
+          ls -la blazarcoder/blazarcoder
+          file blazarcoder/blazarcoder
 
       - name: Build Summary
         run: |

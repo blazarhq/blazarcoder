@@ -1,7 +1,7 @@
 {
-  "name": "@ceralive/ceracoder",
+  "name": "@blazarbox/blazarcoder",
   "version": "0.1.0",
-  "description": "Type-safe ceracoder bindings (config + CLI helpers) for CeraUI integration.",
+  "description": "Type-safe blazarcoder bindings (config + CLI helpers) for BlazarUI integration.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,10 +20,10 @@
   },
   "license": "GPL-3.0",
   "keywords": [
-    "ceracoder",
+    "blazarcoder",
     "srt",
     "gstreamer",
-    "ceralive",
+    "blazarbox",
     "config",
     "cli"
   ]

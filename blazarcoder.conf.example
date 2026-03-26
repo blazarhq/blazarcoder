@@ -1,6 +1,6 @@
-# ceracoder configuration file
+# blazarcoder configuration file
 #
-# Reload while running with: kill -HUP $(pidof ceracoder)
+# Reload while running with: kill -HUP $(pidof blazarcoder)
 
 [general]
 # Bitrate limits (Kbps)

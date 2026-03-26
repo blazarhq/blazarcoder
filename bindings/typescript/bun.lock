@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "@ceralive/ceracoder",
+      "name": "@blazarbox/blazarcoder",
       "dependencies": {
         "zod": "^4.3.5",
       },

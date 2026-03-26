@@ -1,6 +1,6 @@
-import { cliOptionsSchema, type CeracoderCliOptions } from "./types.js";
+import { cliOptionsSchema, type BlazarcoderCliOptions } from "./types.js";
 
-export function buildCeracoderArgs(options: CeracoderCliOptions): Array<string> {
+export function buildBlazarcoderArgs(options: BlazarcoderCliOptions): Array<string> {
 	const opts = cliOptionsSchema.parse(options);
 
 	const args: Array<string> = [
