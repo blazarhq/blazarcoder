@@ -61,7 +61,6 @@ jobs:
 
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "channel=${CHANNEL}" >> $GITHUB_OUTPUT
-          echo "Version: ${VERSION} (Channel: ${CHANNEL})"
 
   build:
     name: Build (${{ matrix.arch }})
@@ -75,10 +74,17 @@ jobs:
           - arch: arm64
             runner: ubuntu-24.04-arm
     steps:
-      - name: Checkout code
+      - name: Checkout blazarcoder
         uses: actions/checkout@v4
         with:
+          path: blazarcoder
           submodules: recursive
+
+      - name: Checkout SRT (dependency)
+        uses: actions/checkout@v4
+        with:
+          repository: blazarhq/srt
+          path: srt
 
       - name: Install build dependencies
         run: |
@@ -86,17 +92,33 @@ jobs:
           sudo apt-get install -y \
             build-essential \
             cmake \
+            git \
+            libssl-dev \
             pkg-config \
+            tclsh \
             libgstreamer1.0-dev \
             libgstreamer-plugins-base1.0-dev \
-            libsrt-dev
+            gstreamer1.0-plugins-base
 
-      - name: Build (${{ matrix.arch }})
+      - name: Build SRT
         run: |
-          mkdir -p build-output/usr
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+          cd srt
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DENABLE_APPS=OFF \
+            -DENABLE_BONDING=ON \
+            -DENABLE_ENCRYPTION=ON
           cmake --build build -j$(nproc)
-          DESTDIR=$PWD/build-output cmake --install build
+          sudo cmake --install build
+
+      - name: Build blazarcoder
+        run: |
+          cd blazarcoder
+          make -j$(nproc)
+          cd ..
+          mkdir -p build-output/usr/bin
+          cp blazarcoder/blazarcoder build-output/usr/bin/
 
       - name: Install FPM
         run: |
@@ -152,6 +174,8 @@ jobs:
     name: Sign and Publish to R2
     needs: [calculate-version, build]
     runs-on: ubuntu-latest
+    permissions:
+        contents: write
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -197,7 +221,7 @@ jobs:
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip -q awscliv2.zip
-          sudo ./aws/install
+          sudo ./aws/install --update
 
       - name: Upload to R2
         env:
