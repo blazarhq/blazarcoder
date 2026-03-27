@@ -114,9 +114,10 @@ jobs:
 
       - name: Build blazarcoder
         run: |
-          cd blazarcoder
           mkdir -p build-output/usr
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+          cmake -S blazarcoder -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=/usr
           cmake --build build -j$(nproc)
           DESTDIR=$PWD/build-output cmake --install build
 
