@@ -114,12 +114,11 @@ jobs:
 
       - name: Build blazarcoder
         run: |
-          mkdir -p build-output/usr
-          cmake -S blazarcoder -B build \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX=/usr
-          cmake --build build -j$(nproc)
-          DESTDIR=$PWD/build-output cmake --install build
+          cd blazarcoder
+          make -j$(nproc)
+          cd ..
+          mkdir -p build-output/usr/bin
+          cp blazarcoder/blazarcoder build-output/usr/bin/
 
       - name: Install FPM
         run: |
